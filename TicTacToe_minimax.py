@@ -1,57 +1,57 @@
 import time 
 import math 
 
-board = {7: ' ', 8: ' ', 9: ' ',
+BOARD = {7: ' ', 8: ' ', 9: ' ',
          4: ' ', 5: ' ', 6: ' ',
          1: ' ', 2: ' ', 3: ' '}
 
-player = "X"
-bot = "O" 
+PLAYER = "X"
+BOT = "O" 
 
 def main(): 
-    printBoard(board)
-    while not isWinner(board): 
-        playerMove()
-        printBoard(board)
+    printBOARD(BOARD)
+    while not isWinner(BOARD): 
+        PLAYERMove()
+        printBOARD(BOARD)
         pcMove() 
-        printBoard(board)
+        printBOARD(BOARD)
         if isTie(): 
             break    
         
 
 
-# printing board every turn 
+# printing BOARD every turn 
 # Makes dictionary readable 
-def printBoard(board): 
-    print(board[7] + " | " + board[8] + " | " + board[9])
+def printBOARD(BOARD): 
+    print(BOARD[7] + " | " + BOARD[8] + " | " + BOARD[9])
     print("--+---+--")
-    print(board[4] + " | " + board[5] + " | " + board[6])
+    print(BOARD[4] + " | " + BOARD[5] + " | " + BOARD[6])
     print("--+---+--")
-    print(board[1] + " | " + board[2] + " | " + board[3])
+    print(BOARD[1] + " | " + BOARD[2] + " | " + BOARD[3])
     print("\n")
 
 # Checks if space is free
 # If space is not free then it'll ask user to input another position 
 def spaceIsFree(position): 
-    return board[position] == ' '                           # need return to tell us True/False boolean 
+    return BOARD[position] == ' '                           # need return to tell us True/False boolean 
          
 # inserting letter in open space 
 def insertLetter(letter, position): 
-    board[position] = letter                                # Syntax error earlier. I am not returning a value and equating it to letter. I am assigning. return board[pos] == letter isn't correct 
+    BOARD[position] = letter                                # Syntax error earlier. I am not returning a value and equating it to letter. I am assigning. return BOARD[pos] == letter isn't correct 
 
-# Player move checks if spaceIsFree then insertLetter into board 
-def playerMove():  
+# PLAYER move checks if spaceIsFree then insertLetter into BOARD 
+def PLAYERMove():  
     while True: 
         try:                                                # Try/except allows us to handle input error 
             move = int(input('Where would you like to move? [1-9]: '))
             if spaceIsFree(move):                           # condition should be if int(input) is successful. If not it'll print the reason why and then reloop 
-                insertLetter(player, move)
+                insertLetter(PLAYER, move)
                 break
             else: 
                 print("Space is taken. Pick another position")
         except: 
             print('Please enter a number from [1-9]: ')
-    if isWinner(board): 
+    if isWinner(BOARD): 
         print('X has won!')
     if isTie(): 
         print('Tie game!')
@@ -69,19 +69,19 @@ def pcMove():
     # if score is highest, replace current bestScore
     # bestMove for that score is the key, the number in the dictionary 
     # this f(x) pcMove and the loop relates the Key, value to the score and minimax function 
-    for key in board.keys(): 
-        if board[key] == ' ': 
-            board[key] = bot 
-            score = minimax(board, 0, alpha, beta, True)# depth of 0 but it'll increase as keys loop through the dictionary 
-            board[key] = ' '               # place temp move, compute score of that move, and then remove it. Do this to compute scores of all possible moves 
+    for key in BOARD.keys(): 
+        if BOARD[key] == ' ': 
+            BOARD[key] = BOT 
+            score = minimax(BOARD, 0, alpha, beta, True)# depth of 0 but it'll increase as keys loop through the dictionary 
+            BOARD[key] = ' '               # place temp move, compute score of that move, and then remove it. Do this to compute scores of all possible moves 
             if score < bestScore: 
                 bestScore = score 
                 bestMove = key 
     end = time.time() 
     print("Evaluation time: {}s".format(round(end - start, 7)))
 
-    insertLetter(bot, bestMove)  
-    if isWinner(board): 
+    insertLetter(BOT, bestMove)  
+    if isWinner(BOARD): 
         print('O has won!')
     if isTie(): 
         print('Tie game!')
@@ -95,9 +95,9 @@ def minimax(position, depth, alpha, beta, isMaximizing):
     # Tells us how each move is scored 
     # This is the base case right here. At the basecase, it gives a score of who won 
     # depth 0 means current node. (depth - 1) means we want to keep checking the next node down everyturn until we reach the basecase/the leaf node 
-    if whichLetterWon(player): 
+    if whichLetterWon(PLAYER): 
         return 1 
-    elif whichLetterWon(bot): 
+    elif whichLetterWon(BOT): 
         return -1
     elif isTie(): 
         return 0 
@@ -105,11 +105,11 @@ def minimax(position, depth, alpha, beta, isMaximizing):
     # maximizing 
     if isMaximizing: 
         bestScore = -math.inf
-        for key in board.keys(): 
-            if board[key] == ' ': 
-                board[key] = player 
-                score = minimax(board, depth - 1, alpha, beta, False) 
-                board[key] = ' ' 
+        for key in BOARD.keys(): 
+            if BOARD[key] == ' ': 
+                BOARD[key] = PLAYER 
+                score = minimax(BOARD, depth - 1, alpha, beta, False) 
+                BOARD[key] = ' ' 
                 if score > bestScore: 
                     bestScore = score
                 alpha = max(alpha, score) 
@@ -120,11 +120,11 @@ def minimax(position, depth, alpha, beta, isMaximizing):
     # minimizing
     else: 
         bestScore = math.inf 
-        for key in board.keys(): 
-            if board[key] == ' ': 
-                board[key] = bot 
-                score = minimax(board, depth - 1,alpha, beta, True) 
-                board[key] = ' ' 
+        for key in BOARD.keys(): 
+            if BOARD[key] == ' ': 
+                BOARD[key] = BOT 
+                score = minimax(BOARD, depth - 1,alpha, beta, True) 
+                BOARD[key] = ' ' 
                 if score < bestScore: 
                     bestScore = score
                 beta = min(beta, score)
@@ -134,50 +134,50 @@ def minimax(position, depth, alpha, beta, isMaximizing):
     
 # Need whichLetterWon function for minimax to score winner. 
 def whichLetterWon(mark): 
-    if board[7] == board[8] == board[9] == mark: 
+    if BOARD[7] == BOARD[8] == BOARD[9] == mark: 
         return True 
-    elif board[4] == board[5] == board[6] == mark: 
+    elif BOARD[4] == BOARD[5] == BOARD[6] == mark: 
         return True
-    elif board[1] == board[2] == board[3] == mark: 
+    elif BOARD[1] == BOARD[2] == BOARD[3] == mark: 
         return True
-    elif board[1] == board[4] == board[7] == mark: 
+    elif BOARD[1] == BOARD[4] == BOARD[7] == mark: 
         return True
-    elif board[2] == board[5] == board[8] == mark: 
+    elif BOARD[2] == BOARD[5] == BOARD[8] == mark: 
         return True
-    elif board[3] == board[6] == board[9] == mark: 
+    elif BOARD[3] == BOARD[6] == BOARD[9] == mark: 
         return True
-    elif board[1] == board[5] == board[9] == mark: 
+    elif BOARD[1] == BOARD[5] == BOARD[9] == mark: 
         return True
-    elif board[7] == board[5] == board[3] == mark: 
+    elif BOARD[7] == BOARD[5] == BOARD[3] == mark: 
         return True
     else:                                  
         return False 
 
 # winning condition
-def isWinner(board): 
-    if board[7] == board[8] == board[9] != ' ': 
+def isWinner(BOARD): 
+    if BOARD[7] == BOARD[8] == BOARD[9] != ' ': 
         return True 
-    elif board[4] == board[5] == board[6] != ' ': 
+    elif BOARD[4] == BOARD[5] == BOARD[6] != ' ': 
         return True
-    elif board[1] == board[2] == board[3] != ' ': 
+    elif BOARD[1] == BOARD[2] == BOARD[3] != ' ': 
         return True
-    elif board[1] == board[4] == board[7] != ' ': 
+    elif BOARD[1] == BOARD[4] == BOARD[7] != ' ': 
         return True
-    elif board[2] == board[5] == board[8] != ' ': 
+    elif BOARD[2] == BOARD[5] == BOARD[8] != ' ': 
         return True
-    elif board[3] == board[6] == board[9] != ' ': 
+    elif BOARD[3] == BOARD[6] == BOARD[9] != ' ': 
         return True
-    elif board[1] == board[5] == board[9] != ' ': 
+    elif BOARD[1] == BOARD[5] == BOARD[9] != ' ': 
         return True
-    elif board[7] == board[5] == board[3] != ' ': 
+    elif BOARD[7] == BOARD[5] == BOARD[3] != ' ': 
         return True
     else:                                  
         return False        
 
 # check for tie 
 def isTie(): 
-    for key in board.keys():                # iterate through keys. Check if empty value at KV. If so then False (no tie). This method is better than hardcoding 
-        if board[key] == ' ': 
+    for key in BOARD.keys():                # iterate through keys. Check if empty value at KV. If so then False (no tie). This method is better than hardcoding 
+        if BOARD[key] == ' ': 
             return False
     return True 
      
@@ -200,4 +200,4 @@ main()
 # LESSONS LEARNED
 # 1. implementing alpha-beta pruning makes the program 10x+ faster 
 # 2. alpha-beta are essential local max/min. Whenever we have a smaller beta than an alpha, it cuts off the tree. I do this when deciding what tree to prune. The current value at the node gets compared to the local max
-# 3. if I repeat a program multiple times, I'll have to write a function for it - insertLetter, isSpaceFree, PCmove, PlayerMove, WinningCondition,
+# 3. if I repeat a program multiple times, I'll have to write a function for it - insertLetter, isSpaceFree, PCmove, PLAYERMove, WinningCondition,
